@@ -49,6 +49,7 @@ function toFriendlyError(error, fallback) {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [view, setView] = useState('employe');
   const [session, setSession] = useState(null);
   const [avis, setAvis] = useState([]);
@@ -92,6 +93,11 @@ export default function App() {
     if (view !== 'directeur' || !session) return;
     loadDirectorData();
   }, [view, session]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowSplash(false), 2600);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   async function loadDirectorData() {
     const rows = await loadAvis();
@@ -357,6 +363,24 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      {showSplash && (
+        <section className="splash-screen" aria-label="Ecran de bienvenue">
+          <div className="splash-glow splash-glow-one" aria-hidden="true" />
+          <div className="splash-glow splash-glow-two" aria-hidden="true" />
+
+          <div className="splash-card">
+            <img src={metroLogo} alt="Metro" className="splash-logo" />
+            <p className="splash-kicker">Portail interne</p>
+            <h2 className="splash-title">Avis Employes</h2>
+            <p className="splash-subtitle">Le terrain parle. La direction agit.</p>
+
+            <button type="button" className="splash-btn" onClick={() => setShowSplash(false)}>
+              Entrer dans la plateforme
+            </button>
+          </div>
+        </section>
+      )}
+
       <div className="bg-orb bg-orb-one" aria-hidden="true" />
       <div className="bg-orb bg-orb-two" aria-hidden="true" />
 
